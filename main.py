@@ -19,6 +19,12 @@ from dateutil import tz
 site_data = {}
 by_uid = {}
 
+# TODO - Load the zoom utils.
+zoom_utils = {}
+
+# TODO - Load the slack utils.
+slack_utils = {}
+
 
 def paper_check(row):
     return "paper" in row['type']
@@ -88,6 +94,27 @@ def main(site_data_path):
     # print(site_data["papers"][0])
     # print(site_data["days"][0])
     return extra_files
+
+def setupZoomMeetings(target_module, root_path):
+    if (target_module == "tutorials"):
+        tutorials_module = Tutorials(root_path + "tutorials.csv")
+        
+        # Setting up zoom Utils.
+        tutorials_module.setupZoomCalls(zoom_utils)
+
+    else:
+        raise Exception("Module is not supported")
+
+def setupSlackChannels(target_module, root_path):
+    if (target_module == "tutorials"):
+        tutorials_module = Tutorials(root_path + "tutorials.csv")
+        
+        # Setting up zoom Utils.
+        tutorials_module.setupSlackChannels(slack_utils)
+
+    else:
+        raise Exception("Module is not supported")
+
 
 
 # ------------- SERVER CODE -------------------->
@@ -545,13 +572,22 @@ if __name__ == "__main__":
     if(target_module is None):
         raise Exception("target_module is not passed")
 
+    print("Triggering using the following commands: " + data_path + "; " + target_action + "; " + target_module)
+
     extra_files = main(data_path)
 
-    if args.build:
-        freezer.freeze()
-    else:
-        debug_val = False
-        if os.getenv("FLASK_DEBUG") == "True":
-            debug_val = True
+    if target_action == "setup-zoom-meetings":
+        setupZoomMeetings(target_module)
+    elif target_action == "setup-slack-channels":
+        setupSlackChannels(target_module)
+    elif target_module == "setup-webpage":
+        if args.build:
+            freezer.freeze()
+        else:
+            debug_val = False
+            if os.getenv("FLASK_DEBUG") == "True":
+                debug_val = True
+            app.run(port=5000, debug=debug_val, extra_files=extra_files)
 
-        app.run(port=5000, debug=debug_val, extra_files=extra_files)
+
+    
