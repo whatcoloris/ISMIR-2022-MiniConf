@@ -521,6 +521,10 @@ def parse_arguments():
 
     parser.add_argument("path", help="Pass the JSON data path and run the server")
 
+    parser.add_argument("target_action", help="Pass the action setup-zoom-meetings, setup-slack-channels or setup-webpage")
+
+    parser.add_argument("target_module", help="Pass the module for which action has to be done")
+
     args = parser.parse_args()
     return args
 
@@ -528,8 +532,20 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    site_data_path = args.path
-    extra_files = main(site_data_path)
+    data_path = args.path
+    target_action = args.target_action
+    target_module = args.target_module
+
+    if(data_path is None):
+        raise Exception("data_path is no passed")
+
+    if(target_action is None):
+        raise Exception("target_action is not passed")
+    
+    if(target_module is None):
+        raise Exception("target_module is not passed")
+
+    extra_files = main(data_path)
 
     if args.build:
         freezer.freeze()
