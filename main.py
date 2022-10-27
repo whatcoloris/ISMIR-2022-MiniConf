@@ -15,12 +15,20 @@ from pytz import timezone
 import tzlocal
 import datetime
 from dateutil import tz
+import sys
+
+# TODO Move the utils code to the same repo once everything is setup.
+sys.path.append("../rcdApp-ISMIR-2022/")
+sys.path.append("modules")
+
+import zoom as zoomUtils
+from tutorials import Tutorials
 
 site_data = {}
 by_uid = {}
 
 # TODO - Load the zoom utils.
-zoom_utils = {}
+# zoom_utils = {}
 
 # TODO - Load the slack utils.
 slack_utils = {}
@@ -100,7 +108,7 @@ def setupZoomMeetings(target_module, root_path):
         tutorials_module = Tutorials(root_path + "tutorials.csv")
         
         # Setting up zoom Utils.
-        tutorials_module.setupZoomCalls(zoom_utils)
+        tutorials_module.setupZoomCalls(zoomUtils)
 
     else:
         raise Exception("Module is not supported")
@@ -577,7 +585,7 @@ if __name__ == "__main__":
     extra_files = main(data_path)
 
     if target_action == "setup-zoom-meetings":
-        setupZoomMeetings(target_module)
+        setupZoomMeetings(target_module, data_path)
     elif target_action == "setup-slack-channels":
         setupSlackChannels(target_module)
     elif target_module == "setup-webpage":
