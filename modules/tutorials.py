@@ -1,3 +1,5 @@
+import pandas as pd
+
 # Defining the class that exposes the folliwing methods.
 class Tutorials:
     """
@@ -20,7 +22,25 @@ class Tutorials:
     def setupSlackChannels(self, slackUtils):
         if(self.tutorialsCsvFile is None):
             raise Exception("self.tutorialsCsvFile passed in contructor is null")
-        slackUtils.createSlackChannelsIfNeeded(self.tutorialsCsvFile, "slack_channel")
+        # Creating slack channels ...
+        print("Trying to create channels if already not created")
+        slackUtils.createPrivateSlackChannels(slackUtils.client, self.tutorialsCsvFile, "slack_channel")
+        print("############################################") 
+        print("#########Creating of channels done##########") 
+        print("############################################") 
+
+        # Updating the description of the slack channels.
+        print("Starting to update the description now")
+        csv_data = pd.read_csv(self.tutorialsCsvFile)
+        for index, entry in csv_data.iterrows():
+            targetChannel = entry["slack_channel"]
+            targetDesc = entry["description"] # TODO -- Add the zoom call link here
+            print("Updating the description for ", targetChannel, " with desc ", targetDesc)
+            slackUtils.updateDescription(slackUtils.client, targetChannel, targetDesc)
+
+        print("############################################") 
+        print("#########Updating of description done#######") 
+        print("############################################") 
 
     """ 
     This method takes the file path andd loads the data into memory.

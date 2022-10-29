@@ -22,16 +22,11 @@ sys.path.append("../rcdApp-ISMIR-2022/")
 sys.path.append("modules")
 
 import zoom as zoomUtils
+import slackChannelCreator as slackUtils
 from tutorials import Tutorials
 
 site_data = {}
 by_uid = {}
-
-# TODO - Load the zoom utils.
-# zoom_utils = {}
-
-# TODO - Load the slack utils.
-slack_utils = {}
 
 
 def paper_check(row):
@@ -118,7 +113,7 @@ def setupSlackChannels(target_module, root_path):
         tutorials_module = Tutorials(root_path + "tutorials.csv")
         
         # Setting up zoom Utils.
-        tutorials_module.setupSlackChannels(slack_utils)
+        tutorials_module.setupSlackChannels(slackUtils)
 
     else:
         raise Exception("Module is not supported")
