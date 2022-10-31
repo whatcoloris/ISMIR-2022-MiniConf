@@ -1,12 +1,20 @@
 import pandas as pd
+import copy
+
+
+MORNING_TUTORIAL_COL = "Select the morning session tutorial you wish to attend"
+AFTERNOON_TUTORIAL_COL = "Select the afternoon session tutorial you wish to attend"
+ATTENDEE_EMAIL = "Attendee Email"
 
 # Defining the class that exposes the folliwing methods.
 class Tutorials:
     """
     This method takes the config data loaded and the tutorials csv file.
     """
-    def __init__(self, tutorialsCsvFile):
+    def __init__(self, tutorialsCsvFile, townscriptCsvFile):
         self.tutorialsCsvFile = tutorialsCsvFile
+        self.townscriptCsvFile = townscriptCsvFile
+        self.useDummyValues = True
 
     """
     This method inputs the 
@@ -40,18 +48,58 @@ class Tutorials:
 
         print("############################################") 
         print("#########Updating of description done#######") 
+        print("############################################")
+
+        # Adding users to respective slack channels.
+        print("Starting to add users to respective slack channels")
+        # titles is of format {<title>: (<channel_id>, [... list of email ids])}
+        titles = {}
+
+        # Reading all the titles
+        for index, entry in csv_data.iterrows():
+            titles[entry["title"]] = (entry["slack_channel"], [])
+        print("The titles are: ", titles)
+        
+        # Cleaning the data bit. Removing the trailing quotes and equal to.
+        townscript_data = pd.read_csv(self.townscriptCsvFile)
+        
+        titles_not_found = []
+        # Iterating over each row for the townscript data.
+        for index, entry in townscript_data.iterrows():
+            # Checking for 
+            if(getCleanTitle(entry[MORNING_TUTORIAL_COL]) in titles):
+                # Appending email to the tutorial list.
+                titles[entry[MORNING_TUTORIAL_COL]][1].append(entry[ATTENDEE_EMAIL])
+            if(getCleanTitle(entry[AFTERNOON_TUTORIAL_COL]) in titles):
+                titles[entry[AFTERNOON_TUTORIAL_COL]][1].append(entry[ATTENDEE_EMAIL])
+            else:
+                titles_not_found.append(getCleanTitle(entry[AFTERNOON_TUTORIAL_COL]))
+
+        print("Tutorials and attendes", titles)
+
         print("############################################") 
+        print("#########Titles not found#######") 
+        print("############################################")
+        print("titles_not_found", titles_not_found)
 
-    """ 
-    This method takes the file path andd loads the data into memory.
-    """
-    # def setupDataForWebPage():
-    #     if(self.tutorialsCsvFile is None):
-    #         raise Exception("self.tutorialsCsvFile passed in contructor is null")
-    #     site_data = list(csv.DictReader(open(self.tutorialsCsvFile)))
-    #     data["tutorials"] = [t for t in site_data if t['category'] == "Tutorials"]
-    #     data["tut_md"] = {}
-    #     for t in ['1', '2', '3', '4', '5']:
-    #         data["tut_md"][t] = open(f"static/tutorials/tut_{t}.md").read()
-    #     return data
+        print("Starting to send out invites")
 
+        # Creating a deep copy.
+        titles_to_be_used = copy.deepcopy(titles)
+
+        # If we have to use dummy values, then we just send invites to dummy values.
+        if(self.useDummyValues):
+            for key in titles_to_be_used.keys():
+                titles_to_be_used[key] = (titles_to_be_used[key][0], ["swapnilgupta.iiith@gmail.com", "sharathadavanne@gmail.com "])
+        
+        print("######## The final data for emails is", titles_to_be_used)
+
+        # Finally sending the invite emails.
+        for channel_email_tuple in titles_to_be_used.values():
+            for email in channel_email_tuple[1]:
+                print("Adding user ", email, " to channel ", channel_email_tuple[0])
+                slackUtils.inviteUserToChannel(slackUtils.client, email, channel_email_tuple[0])
+
+
+def getCleanTitle(incoming):
+    return str(incoming).replace('"', '').replace('=', '')
