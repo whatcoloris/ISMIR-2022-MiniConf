@@ -56,15 +56,15 @@ def main(site_data_path):
                 site_data[name] = list(csv.DictReader(open(f)))
         elif typ == "yml":
             site_data[name] = yaml.load(open(f).read(), Loader=yaml.SafeLoader)
-    for typ in ["papers", "speakers", "industry", "music", "lbds", "events"]:
+    for typ in ["papers", "industry", "music", "lbds", "events"]:
         by_uid[typ] = {}
         for p in site_data[typ]:
-            by_uid[typ][p["UID"]] = p
+            by_uid[typ][p["uid"]] = p
     print("Data Successfully Loaded")
     by_uid["days"] = {}
     site_data["days"] = []
     for day in ['1', '2', '3', '4']:
-        speakers = [s for s in site_data["speakers"] if s["day"] == day]
+        speakers = [s for s in site_data["events"] if s["day"] == day and p["category"] == "All Meeting"]
         posters = [p for p in site_data["events"] if p["day"] == day and p["category"] == "Poster session"]
         music = [m for m in site_data["events"] if m["day"] == day and m["category"] == "Music concert"]
         industry = [m for m in site_data["events"] if m["day"] == day and m["category"] == "Industry"]
@@ -90,8 +90,6 @@ def main(site_data_path):
             "business": business,
         }
         site_data["days"].append(by_uid["days"][day])
-    # print(site_data["papers"][0])
-    # print(site_data["days"][0])
     return extra_files
 
 def setupZoomMeetings(target_module, root_path):
@@ -256,9 +254,9 @@ def topics():
 
 @app.route("/getCalendar")
 def get_calendar():
-    return send_file('static/calendar/ISMIR_2020.ics',
+    return send_file('static/calendar/ISMIR_2022.ics',
                     mimetype='text/ics',
-                    attachment_filename='ISMIR_2020.ics',
+                    attachment_filename='ISMIR_2022.ics',
                     as_attachment=True)
 
 def extract_list_field(v, key):
@@ -491,7 +489,6 @@ def lbds_json():
 @app.route("/static/<path:path>")
 def send_static(path):
     if "wo_num" not in path:
-        # print(path)
         return send_from_directory("static", path)
 
 
@@ -584,7 +581,7 @@ if __name__ == "__main__":
             debug_val = False
             if os.getenv("FLASK_DEBUG") == "True":
                 debug_val = True
-            app.run(port=5000, debug=debug_val, extra_files=extra_files)
+            app.run(port=5100, debug=debug_val, extra_files=extra_files)
 
 
     

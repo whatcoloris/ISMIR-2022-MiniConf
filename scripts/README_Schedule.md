@@ -8,7 +8,7 @@ the calendar view (e.g. filtered poster sessions).
 4) run the `parse_calendar.py` script:
 
 ```bash
-python parse_calendar.py --in sample_cal.ics
+python calendar_ics2json.py --in sample_cal.ics
 ``` 
 
 ### Example
