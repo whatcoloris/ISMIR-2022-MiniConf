@@ -100,6 +100,7 @@ def get_all_user_data(slackClient):
 
 # Get all channel data
 # conversations_list required the channel:read bot scope
+# limit sets the number of channels which we want to output, 1000 is the limit, default: 100
 def get_all_channels_data(slackClient):
     
     all_channel_data = []
@@ -266,7 +267,7 @@ def inviteUserToChannel(slackClient, user_email, channelName):
 
 # createSlackChannelAsBot(client, "private-channel-4", True)
 
-print(get_all_channels_data(client))
+# print(get_all_channels_data(client))
 
 # print(isChannel(client, 'private-channel-4'))
 
