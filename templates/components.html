@@ -433,7 +433,6 @@
   {% for meet in type %}
   {% set str_index = loop.index | string %}
   {% set local_date = meet.start_date | localizetime(meet.start_time, timezone) %}
-  {% set local_date_b = meet.start_date_b | localizetime(meet.start_time_b, timezone) %}
   <div class="col-12 p-3" style="box-sizing: border-box;">
     <div class="card" style="display: block; overflow: hidden; width: 100%;">
       <div
@@ -452,11 +451,8 @@
         <div class="m-3 text-left card-subtitle text-muted">
           {{meet.organiser}}
         </div>
-        <div class="m-3 text-left card-subtitle" style="display:flex; align-content: center;">
-          <span class="mr-2 h5">A: </span>{{local_date[0]}} | {{local_date[1]}} ({{ timezone }})
-        </div>
-        <div class="ml-3 mb-3 text-left card-subtitle" style="display:flex; align-content: center;">
-          <span class="mr-2 h5">B: </span>{{local_date_b[0]}} | {{local_date_b[1]}} ({{ timezone }})
+        <div class="m-3 text-left card-subtitle text-muted" style="display:flex; align-content: center;">
+          {{local_date[0]}} | {{local_date[1]}} ({{ timezone }})
         </div>
         <div class="mt-3 ml-3 mr-3 mb-4 text-left card-subtitle">
           {{tut_md[str_index] | markdown}}

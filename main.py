@@ -15,6 +15,11 @@ from pytz import timezone
 import tzlocal
 import datetime
 from dateutil import tz
+import sys
+
+from utils import zoom as zoomUtils
+from utils import slack as slackUtils
+from modules.tutorials import Tutorials
 
 site_data = {}
 by_uid = {}
@@ -88,6 +93,27 @@ def main(site_data_path):
     # print(site_data["papers"][0])
     # print(site_data["days"][0])
     return extra_files
+
+def setupZoomMeetings(target_module, root_path):
+    if (target_module == "tutorials"):
+        tutorials_module = Tutorials(root_path + "tutorials.csv")
+        
+        # Setting up zoom Utils.
+        tutorials_module.setupZoomCalls(zoomUtils)
+
+    else:
+        raise Exception("Module is not supported")
+
+def setupSlackChannels(target_module, root_path):
+    if (target_module == "tutorials"):
+        tutorials_module = Tutorials(root_path + "tutorials.csv")
+        
+        # Setting up zoom Utils.
+        tutorials_module.setupSlackChannels(slackUtils)
+
+    else:
+        raise Exception("Module is not supported")
+
 
 
 # ------------- SERVER CODE -------------------->
@@ -188,9 +214,9 @@ def schedule():
 @app.route("/tutorials.html")
 def tutorials():
     data = _data()
-    data["tutorials"] = [t for t in site_data["tutorials_all"] if t['category'] == "Tutorials"]
+    data["tutorials"] = [t for t in site_data["events"] if t['category'] == "Tutorials"]
     data["tut_md"] = {}
-    for t in ['1', '2', '3', '4', '5']:
+    for t in ['1', '2', '3', '4', '5', '6']:
         data["tut_md"][t] = open(f"static/tutorials/tut_{t}.md").read()
     return render_template("tutorials.html", **data)
 
@@ -357,12 +383,10 @@ def datetimelocalcheck(s):
 def localizetime(date,time,timezone):
     to_zone = tz.gettz(str(timezone))
     date = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M')
-    UTC_date = pytz.utc.localize(date)
-    local_date = UTC_date.astimezone(to_zone)
+    ref_date_tz = pytz.timezone('Asia/Kolkata').localize(date) #[TODO] take ref time zone as input
+    local_date = ref_date_tz.astimezone(to_zone)
     return local_date.strftime("%Y-%m-%d"), local_date.strftime("%H:%M")
 
-
-# app.jinja_env.filters['datetimelocalcheck'] = datetimelocalcheck
 
 # ITEM PAGES
 
@@ -521,6 +545,10 @@ def parse_arguments():
 
     parser.add_argument("path", help="Pass the JSON data path and run the server")
 
+    parser.add_argument("target_action", help="Pass the action setup-zoom-meetings, setup-slack-channels or setup-webpage")
+
+    parser.add_argument("target_module", help="Pass the module for which action has to be done")
+
     args = parser.parse_args()
     return args
 
@@ -528,14 +556,35 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    site_data_path = args.path
-    extra_files = main(site_data_path)
+    data_path = args.path
+    target_action = args.target_action
+    target_module = args.target_module
 
-    if args.build:
-        freezer.freeze()
-    else:
-        debug_val = False
-        if os.getenv("FLASK_DEBUG") == "True":
-            debug_val = True
+    if(data_path is None):
+        raise Exception("data_path is not passed")
 
-        app.run(port=5000, debug=debug_val, extra_files=extra_files)
+    if(target_action is None):
+        raise Exception("target_action is not passed")
+    
+    if(target_module is None):
+        raise Exception("target_module is not passed")
+
+    print("Triggering using the following commands: " + data_path + "; " + target_action + "; " + target_module)
+
+    extra_files = main(data_path)
+
+    if target_action == "setup-zoom-meetings":
+        setupZoomMeetings(target_module, data_path)
+    elif target_action == "setup-slack-channels":
+        setupSlackChannels(target_module)
+    elif target_action == "setup-webpage":
+        if args.build:
+            freezer.freeze()
+        else:
+            debug_val = False
+            if os.getenv("FLASK_DEBUG") == "True":
+                debug_val = True
+            app.run(port=5000, debug=debug_val, extra_files=extra_files)
+
+
+    
