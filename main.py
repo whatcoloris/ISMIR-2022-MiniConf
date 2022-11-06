@@ -17,13 +17,9 @@ import datetime
 from dateutil import tz
 import sys
 
-# TODO Move the utils code to the same repo once everything is setup.
-sys.path.append("../rcdApp-ISMIR-2022/")
-sys.path.append("modules")
-
-import zoom as zoomUtils
-import slackChannelCreator as slackUtils
-from tutorials import Tutorials
+from utils import zoom as zoomUtils
+from utils import slack as slackUtils
+from modules.tutorials import Tutorials
 
 site_data = {}
 by_uid = {}
@@ -218,9 +214,9 @@ def schedule():
 @app.route("/tutorials.html")
 def tutorials():
     data = _data()
-    data["tutorials"] = [t for t in site_data["tutorials_all"] if t['category'] == "Tutorials"]
+    data["tutorials"] = [t for t in site_data["events"] if t['category'] == "Tutorials"]
     data["tut_md"] = {}
-    for t in ['1', '2', '3', '4', '5']:
+    for t in ['1', '2', '3', '4', '5', '6']:
         data["tut_md"][t] = open(f"static/tutorials/tut_{t}.md").read()
     return render_template("tutorials.html", **data)
 
@@ -387,12 +383,10 @@ def datetimelocalcheck(s):
 def localizetime(date,time,timezone):
     to_zone = tz.gettz(str(timezone))
     date = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M')
-    UTC_date = pytz.utc.localize(date)
-    local_date = UTC_date.astimezone(to_zone)
+    ref_date_tz = pytz.timezone('Asia/Kolkata').localize(date) #[TODO] take ref time zone as input
+    local_date = ref_date_tz.astimezone(to_zone)
     return local_date.strftime("%Y-%m-%d"), local_date.strftime("%H:%M")
 
-
-# app.jinja_env.filters['datetimelocalcheck'] = datetimelocalcheck
 
 # ITEM PAGES
 
@@ -567,7 +561,7 @@ if __name__ == "__main__":
     target_module = args.target_module
 
     if(data_path is None):
-        raise Exception("data_path is no passed")
+        raise Exception("data_path is not passed")
 
     if(target_action is None):
         raise Exception("target_action is not passed")
@@ -583,7 +577,7 @@ if __name__ == "__main__":
         setupZoomMeetings(target_module, data_path)
     elif target_action == "setup-slack-channels":
         setupSlackChannels(target_module)
-    elif target_module == "setup-webpage":
+    elif target_action == "setup-webpage":
         if args.build:
             freezer.freeze()
         else:
