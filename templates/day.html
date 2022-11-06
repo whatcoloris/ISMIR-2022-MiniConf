@@ -22,57 +22,60 @@
 <div id="day">
   <!-- Speakers -->
   {% if day.opening %}
-    {{ components.subsection_tag("Opening", "all_b") }}
+    {{ components.subsection_tag("Opening", "open") }}
     {{ components.meetingcard(day.opening, tzone) }}
   {% endif %}
-  {% if day.business %}
-    {{ components.subsection_tag("Business Meeting", "all_b") }}
-    {{ components.meetingcard(day.business, tzone) }}
+
+  {% if day.industry %}
+    {{ components.subsection_tag("Industry Session", "industry") }}
+    {{ components.meetingcard(day.industry, tzone) }}
   {% endif %}
+
   {% if day.speakers %}
   {{ components.subsection_tag("Keynote Speaker", "all") }}
-  <div class="day-section">
-    {{ components.speakergroup(day.speakers, tzone) }}
-  </div>
+  {{ components.speakergroup(day.speakers, tzone) }}
   {% endif %}
+
   {% if day.posters %}
-    {% if day.day == '4' %}
-      {{ components.subsection_tag("LBD and Industry Sessions", "pos") }}
-    {% else %}
-      {{ components.subsection_tag("Poster Sessions", "pos") }}
-    {% endif %}
-  <div class="day-section">
-    {{ components.postercards(day.posters, tzone) }}
-  </div>
+    {{ components.subsection_tag("Poster Sessions", "pos") }}
+    {{ components.meetingcard(day.posters, tzone) }}
   {% endif %}
-  {% if day.music %}
-    {{ components.subsection_tag("Music Sessions", "mus") }}
-    <div class="day-section">
-      {{ components.postercards(day.music, tzone) }}
-    </div>
+
+  {% if day.meetup %}
+    {{ components.subsection_tag("Special Sessions", "meetup") }}
+    {{ components.meetingcard(day.meetup, tzone) }}
   {% endif %}
-  {% if day.special %}
-  {{ components.subsection_tag("Special Meetups", "meet-spec") }}
-  <div class="day-section">
-    {{ components.daycard(day.special, tzone) }}
-  </div>
+
+  {% if day.business %}
+    {{ components.subsection_tag("Business Meeting and Awards", "awards") }}
+    {{ components.meetingcard(day.business, tzone) }}
   {% endif %}
+
+  {% if day.lbd %}
+    {{ components.subsection_tag("Late Breaking Demo", "lbd") }}
+    {{ components.meetingcard(day.lbd, tzone) }}
+  {% endif %}
+
   {% if day.wimir %}
   {{ components.subsection_tag("WiMIR Meetups", "wimir") }}
-  <div class="day-section">
-    {{ components.daycard(day.wimir, tzone) }}
-  </div>
+  {{ components.daycard(day.wimir, tzone) }}
   {% endif %}
-  {% if day.master %}
-  {{ components.subsection_tag("Masterclasses", "master") }}
-  <div class="day-section">
-    {{ components.daycard(day.master, tzone) }}
-  </div>
+
+  {% if day.music %}
+    {{ components.subsection_tag("Music Sessions", "mus") }}
+    {{ components.meetingcard(day.music, tzone) }}
   {% endif %}
-  <!-- {{ components.section("Highlighted Papers") }}
-  <div class="papers">
-    {{ components.highlightgroup(day.highlighted, 1) }}
-  </div> -->
+
+  {% if day.social %}
+    {{ components.subsection_tag("Social Events", "social") }}
+    {{ components.meetingcard(day.social, tzone) }}
+  {% endif %}
+
+  {% if day.vmeetup %}
+    {{ components.subsection_tag("Virtual Special Sessions", "vmeetup") }}
+    {{ components.meetingcard(day.vmeetup, tzone) }}
+  {% endif %}
+
 </div>
 
 <script src="static/js/schedule_nav.js"></script>
