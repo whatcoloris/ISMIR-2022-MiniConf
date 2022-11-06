@@ -67,6 +67,7 @@ def createSlackChannelAsBot(slackClient, channelName, boolChannelPrivacyON):
     )
     # Log the result which includes information like the ID of the conversation
     print(result)
+    print('Channel Created!')
 
 # Get all user data. Returns the data as a dictionary
 # users_list requires bot scope 'users:read' and 'users:read.email' (Required for email)
@@ -106,7 +107,7 @@ def get_all_channels_data(slackClient):
     # conversations_list defaults to public_channel, so we add private_channels as well here
     channelDataType = "public_channel,private_channel"
 
-    result = slackClient.conversations_list(types=channelDataType)
+    result = slackClient.conversations_list(types=channelDataType, limit = 1000)
 
     channels_array = result["channels"]
 
@@ -157,7 +158,6 @@ def createPrivateSlackChannels(slackClient, csvFile, channelColumnName):
         if isChannel(slackClient, channelName) == False:
             try:
                 createSlackChannelAsBot(slackClient, channelName, True)
-                print('Channel Created!')
             except SlackApiError: # set proper exception
                 print(f"Channel exists, but BOT not added to '{channelName}'")
 
@@ -264,9 +264,11 @@ def inviteUserToChannel(slackClient, user_email, channelName):
 
 # get_all_user_data(client)
 
-# createSlackChannelAsBot(client, "private-channel-two", True)
+# createSlackChannelAsBot(client, "private-channel-4", True)
 
-# print(get_all_channels_data(client))
+print(get_all_channels_data(client))
+
+# print(isChannel(client, 'private-channel-4'))
 
 # addUserIDsToASlackChannelById(client, "C046PV056V9", "U044YGS0H41")
 # addUserIDsToASlackChannelById(client, "C046PV056V9", "U046Q1R7B18")
