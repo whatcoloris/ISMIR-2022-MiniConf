@@ -2,6 +2,7 @@ from scripts.calendar_csv2ics import calendar_csv2ics
 from scripts.calendar_ics2json import calendar_ics2json
 
 # Prepare for calendar
+# If links from schedule are not redirecting to the right page, check this code
 calendar_csv2ics()
 calendar_ics2json()
 

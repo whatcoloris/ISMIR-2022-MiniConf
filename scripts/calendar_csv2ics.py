@@ -47,28 +47,23 @@ def calendar_csv2ics(in_csv='../ISMIR-2022-Miniconf-Data/sitedata/events.csv', o
 
         if event['category'] == "Poster session":
             session_num = event['title'].split()[-1]
+            e_cal['location'] = f'papers.html?session={session_num}'
 
-            if any(e in event["title"] for e in ['LBD']):
-                e_cal['location'] = f'lbds.html?session={session_num}'
-            elif any(e in event["title"] for e in ['industry']):
-                e_cal['location'] = f'industry.html?session={session_num}'
-            else:
-                e_cal['location'] = f'papers.html?session={session_num}'
+        if event['category'] == "LBD":
+            e_cal['location'] = f'lbds.html'
+
+        if event['category'] == "Industry":
+            e_cal['location'] = f'industry.html'
 
         elif event['category'] == "Tutorials":
             e_cal['location'] = f'tutorials.html#{event["title"][:2]}'
 
-        elif event['category'] == "Music concert":
+        elif event['category'] == "Music":
             session_num = event['title'].split(" ")[-1]
             e_cal['location'] = f'music.html?session={session_num}'
-        elif event['category'] == "Meetup":
-            e_cal['location'] = event['channel_url']
 
-        elif event['category'] in ["All Meeting", "Meetup-Special", "WiMIR Meetup", "Masterclass"]:
-            if any(e in event["title"] for e in ['Opening', "Business"]):
-                e_cal['location'] = f'day_{event["day"]}.html#{color_dict[event["category"]] + "_b"}'
-            else:
-                e_cal['location'] = f'day_{event["day"]}.html#{color_dict[event["category"]]}'
+        elif event['category'] in ["All Meeting", "Meetup", "VMeetup", "Awards", "WiMIR Meetup", "Social", "Opening"]:
+            e_cal['location'] = f'day_{event["day"]}.html#{color_dict[event["category"]]}'
 
         elif event['category'] == "Satellite":
             e_cal['location'] = event['web_link']
