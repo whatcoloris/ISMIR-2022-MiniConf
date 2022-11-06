@@ -148,10 +148,7 @@ def index():
 
 @app.route("/index.html")
 def home():
-    data = _data()
-    data["readme"] = open("HOME.md").read()
-    data["committee"] = site_data["committee"]["committee"]
-    return render_template("index.html", **data)
+    return redirect("/calendar.html")
 
 
 @app.route("/about.html")
@@ -513,8 +510,6 @@ def generator():
 
     for paper in site_data["papers"]:
         yield "poster", {"poster": str(paper["uid"])}
-    for speaker in site_data["speakers"]:
-        yield "speaker", {"speaker": str(speaker["uid"])}
     for music in site_data["music"]:
         yield "music", {"music": str(music["uid"])}
     for industry in site_data["industry"]:
