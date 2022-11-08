@@ -38,13 +38,15 @@ class Tutorials:
         print("############################################") 
 
         # Updating the description of the slack channels.
+        # TODO - Update the title instead.
         print("Starting to update the description now")
         csv_data = pd.read_csv(self.tutorialsCsvFile)
-        for index, entry in csv_data.iterrows():
-            targetChannel = entry["slack_channel"]
-            targetDesc = entry["description"] # TODO -- Add the zoom call link here
-            print("Updating the description for ", targetChannel, " with desc ", targetDesc)
-            slackUtils.updateDescription(slackUtils.client, targetChannel, targetDesc)
+        #for index, entry in csv_data.iterrows():
+            #targetChannel = entry["slack_channel"]
+            #targetDesc = entry["description"] # TODO -- Add the zoom call link here
+            #print("Updating the description for ", targetChannel, " with desc ", targetDesc)
+            # TODO - Remove this.. this wont work.
+            #slackUtils.updateDescription(slackUtils.client, targetChannel, targetDesc)
 
         print("############################################") 
         print("#########Updating of description done#######") 
@@ -58,7 +60,7 @@ class Tutorials:
         # Reading all the titles
         for index, entry in csv_data.iterrows():
             titles[entry["title"]] = (entry["slack_channel"], [])
-        print("The titles are: ", titles)
+        #print("The titles are: ", titles)
         
         # Cleaning the data bit. Removing the trailing quotes and equal to.
         townscript_data = pd.read_csv(self.townscriptCsvFile)
@@ -98,7 +100,7 @@ class Tutorials:
         for channel_email_tuple in titles_to_be_used.values():
             for email in channel_email_tuple[1]:
                 print("Adding user ", email, " to channel ", channel_email_tuple[0])
-                slackUtils.inviteUserToChannel(slackUtils.client, email, channel_email_tuple[0])
+                slackUtils.inviteUserToChannel(slackUtils.client, email, channel_email_tuple[0].replace("#", ''))
 
 
 def getCleanTitle(incoming):
