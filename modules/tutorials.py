@@ -17,7 +17,7 @@ class Tutorials:
         self.useDummyValues = True
 
     """
-    This method inputs the 
+    This method inputs the zoomUtils and setup zoom calls for the all the sessions.
     """
     def setupZoomCalls(self, zoomUtils):
         if(self.tutorialsCsvFile is None):
