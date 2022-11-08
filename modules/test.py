@@ -6,12 +6,16 @@ sys.path.append("..")
 sys.path.append(".")
 
 from utils import slack as slackUtils
+from utils import zoom as zoomUtils
 from modules.tutorials import Tutorials
+from modules.papers import Papers
 
-#import slack as slackUtils
-#from slackChannelCreator import *
-#from tutorials import Tutorials
+# Uncommnet below for tutorials
+#tutObj = Tutorials("../../ISMIR-2022-Miniconf-Data/sitedata/papers.csv", "../../ISMIR-2022-Miniconf-Data/sitedata/townscript.csv")
+#tutObj.setupSlackChannels(slackUtils)
 
+##########################
 
-tutObj = Tutorials("../../ISMIR-2022-Miniconf-Data/sitedata/tutorials_all.csv", "../../ISMIR-2022-Miniconf-Data/sitedata/townscript.csv")
-tutObj.setupSlackChannels(slackUtils)
+# Uncommnet below for papers
+paperObj = Papers("../../ISMIR-2022-Miniconf-Data/sitedata/papers.csv", "../../ISMIR-2022-Miniconf-Data/sitedata/townscript.csv")
+paperObj.setupZoomCalls(zoomUtils)
