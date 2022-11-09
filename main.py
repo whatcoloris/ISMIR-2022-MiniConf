@@ -47,18 +47,17 @@ def main(site_data_path):
         if typ == "json":
             site_data[name] = json.load(open(f))
         elif typ in {"csv", "tsv"}:
-            # if name == "papers":
-            #     all_content = csv.DictReader(open(f))
-            #     site_data["papers"] = list(filter(paper_check, all_content))
-            #     site_data["music"] = list(filter(music_check, all_content))
-            #     site_data["lbd"] = list(filter(lbd_check, all_content))
-            # else:
-                site_data[name] = list(csv.DictReader(open(f)))
+            site_data[name] = list(csv.DictReader(open(f)))
         elif typ == "yml":
             site_data[name] = yaml.load(open(f).read(), Loader=yaml.SafeLoader)
     for typ in ["papers", "industry", "music", "lbds", "events"]:
         by_uid[typ] = {}
+        # print(typ)
+        # if typ == 'lbds':
+        #     from IPython import embed
+        #     embed()
         for p in site_data[typ]:
+
             by_uid[typ][p["uid"]] = p
     print("Data Successfully Loaded")
     by_uid["days"] = {}
