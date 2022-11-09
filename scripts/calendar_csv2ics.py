@@ -50,7 +50,8 @@ def calendar_csv2ics(in_csv='../ISMIR-2022-Miniconf-Data/sitedata/events.csv', o
             e_cal['location'] = f'papers.html?session={session_num}'
 
         if event['category'] == "LBD":
-            e_cal['location'] = f'lbds.html'
+            session_num = event['title'].replace('(', '').replace(')', '').split()[-1]
+            e_cal['location'] = f'lbds.html?session={session_num}'
 
         if event['category'] == "Industry":
             e_cal['location'] = f'industry.html'

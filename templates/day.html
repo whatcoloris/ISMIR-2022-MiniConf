@@ -42,7 +42,7 @@
   {% endif %}
 
   {% if day.meetup %}
-    {{ components.subsection_tag("Special Sessions", "meetup") }}
+    {{ components.subsection_tag("Special Sessions", "meet") }}
     {{ components.meetingcard(day.meetup, tzone) }}
   {% endif %}
 
@@ -72,7 +72,7 @@
   {% endif %}
 
   {% if day.vmeetup %}
-    {{ components.subsection_tag("Virtual Special Sessions", "vmeetup") }}
+    {{ components.subsection_tag("Virtual Special Sessions", "vmeet") }}
     {{ components.meetingcard(day.vmeetup, tzone) }}
   {% endif %}
 
