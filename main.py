@@ -268,11 +268,11 @@ def extract_list_field(v, key):
     if isinstance(value, list):
         return value
     else:
-        return value.split("|")
+        return value.split(";")
 
 
 def format_paper(v):
-    list_keys = ["authors", "keywords", "session"]
+    list_keys = ["authors", "primary_subject", "secondary_subject", "session"]
     list_fields = {}
     for key in list_keys:
         list_fields[key] = extract_list_field(v, key)
@@ -284,7 +284,7 @@ def format_paper(v):
         "content": {
             "title": v["title"],
             "authors": list_fields["authors"],
-            "keywords": list_fields["keywords"],
+            "keywords": list(set(list_fields["primary_subject"] + list_fields["secondary_subject"])),
             "abstract": v["abstract"],
             "TLDR": v["abstract"],
             "recs": [],
@@ -293,10 +293,7 @@ def format_paper(v):
             "channel_url": v["channel_url"],
             "channel_name": v["channel_name"],
             "day": v["day"],
-            "slot": v["slot"],
-            "yt_id": v["yt_id"],
-            "bb_id": v["bb_id"]
-            # "poster_pdf": v["poster_pdf"],
+            "yt_id": v["yt_id"]
         },
         "poster_pdf": "GLTR_poster.pdf",
     }
