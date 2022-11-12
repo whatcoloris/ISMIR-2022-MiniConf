@@ -31,30 +31,6 @@ def postMessageToASlackChannelAsBot(slackClient, channelName, messageString):
     result = slackClient.chat_postMessage(channel = channelName, text = messageString)
     print (result)
 
-# Obtain Channel ID when given the channel name
-def getChannelID(slackClient, channelName):
-    data = get_all_channels_data(slackClient)
-    for channel in data:
-        if channel['channel_name'] == channelName:
-            return channel['channel_id']
-    return None
-
-# Obtain User ID given user email
-def getUserID(slackClient, user_email):
-    user_data = get_all_user_data(slackClient)
-    for user in user_data:
-        if user['user_email'] == user_email:
-            return user['user_id']
-    return None
-
-# Obtain user email given user id
-def getUserEmail(slackClient, user_id):
-    user_data = get_all_user_data(slackClient)
-    for user in user_data:
-        if user['user_id'] == user_id:
-            return user['user_email']
-    return None
-
 # Creating Channel as Bot. Requires the app to be first installed to the domain
 # conversations_create requires the channels:manage bot scope and groups:write FOR PRIVATE channels
 def createSlackChannelAsBot(slackClient, channelName, boolChannelPrivacyON):
@@ -126,6 +102,33 @@ def get_all_channels_data(slackClient):
     # print (all_channel_data)
     return all_channel_data
 
+# Making channel data a global variable
+channelsData = get_all_channels_data(client)
+
+# Obtain Channel ID when given the channel name
+def getChannelID(slackClient, channelName):
+    # data = get_all_channels_data(slackClient)
+    for channel in channelsData:
+        if channel['channel_name'] == channelName:
+            return channel['channel_id']
+    return None
+
+# Obtain User ID given user email
+def getUserID(slackClient, user_email):
+    user_data = get_all_user_data(slackClient)
+    for user in user_data:
+        if user['user_email'] == user_email:
+            return user['user_id']
+    return None
+
+# Obtain user email given user id
+def getUserEmail(slackClient, user_id):
+    user_data = get_all_user_data(slackClient)
+    for user in user_data:
+        if user['user_id'] == user_id:
+            return user['user_email']
+    return None
+
 # Adding member to channel.
 # conversations_invite requires bot scope channels:manage (and optionally user scope channels:write)
 def addUserIDsToASlackChannelById(slackClient, channelId, userIDs):
@@ -142,7 +145,7 @@ def addUserIDsToASlackChannelById(slackClient, channelId, userIDs):
     return result
 
 # Checks if the channel name already exists in the list of all public and private channels where the bot is added to
-def isChannel(channelName, channelsData):
+def isChannel(channelName):
     # channelsData = get_all_channels_data(slackClient)
     for channel_data in channelsData:
         if channel_data['channel_name'] == channelName:
@@ -155,9 +158,9 @@ def isChannel(channelName, channelsData):
 def createPrivateSlackChannels(slackClient, csvFile, channelColumnName):
     paper_data = pd.read_csv(csvFile)
     channels = paper_data[channelColumnName]
-    channelsData = get_all_channels_data(slackClient)
+    # channelsData = get_all_channels_data(slackClient)
     for channelName in channels:
-        if isChannel(channelName, channelsData) == False:
+        if isChannel(channelName) == False:
             try:
                 createSlackChannelAsBot(slackClient, channelName, True)
             except SlackApiError: # set proper exception
@@ -203,7 +206,7 @@ def addChannelLinksToCSV(slackClient, csvFile, channelColumnName, newCsvFile = N
     channelsData = get_all_channels_data(slackClient)
     for i, channelName in enumerate(channels):
         try:
-            if isChannel(channelName, channelsData) == True:
+            if isChannel(channelName) == True:
                 paper_data['channel_link'][i] = 'https://slack.com/app_redirect?channel='+getChannelID(slackClient, channelName)
         except:
             print(f'Bot not in channel - {channelName}')
@@ -217,8 +220,8 @@ def addChannelLinksToCSV(slackClient, csvFile, channelColumnName, newCsvFile = N
 # Takes the channel name and the description which needs to be updated
 # Requires admin.teams.write user scope and mainly Enterprise Version of Slack
 def updateDescription(slackClient, channelName, description):
-    channelsData = get_all_channels_data(slackClient)
-    if isChannel(channelName, channelsData) == True:
+    # channelsData = get_all_channels_data(slackClient)
+    if isChannel(channelName) == True:
         channelID = getChannelID(slackClient, channelName)
         slackClient.admin_teams_settings_setDescription(token = slackClient.token, description = description, team_id = channelID)
     else:
@@ -272,19 +275,19 @@ def inviteUserToChannel(slackClient, user_email, channelName):
 
 # print(get_all_channels_data(client))
 
-# print(isChannel('private-channel-4', get_all_channels_data(client)))
+# print(isChannel('private-channel-4'))
 
 # addUserIDsToASlackChannelById(client, "C046PV056V9", "U044YGS0H41")
 # addUserIDsToASlackChannelById(client, "C046PV056V9", "U046Q1R7B18")
 
 # print(len(get_all_channels_data(client)))
-# print(isChannel('private-channel-two', get_all_channels_data(client)))
+# print(isChannel('private-channel-two'))
 
 # createPrivateSlackChannels(client, 'papers-full.csv', 'channel_name') # 89 channels created, 26 not created
 
 # updateDescription(client, 'private-channel-two', 'Hello!')
 
-# print(isChannel('hidden-from-bot-pvt', get_all_channels_data(client)))
+# print(isChannel('hidden-from-bot-pvt'))
 
 # print(isUserAlreadyInWorkspace(client, 'hi@prashantmishra.xyz'))
 
