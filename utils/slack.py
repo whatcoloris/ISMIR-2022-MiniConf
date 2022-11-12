@@ -203,6 +203,7 @@ def addChannelLinksToCSV(slackClient, csvFile, channelColumnName, newCsvFile = N
         paper_data = pd.read_csv(csvFile)
 
     channels = paper_data[channelColumnName]
+    channelsData = get_all_channels_data(slackClient)
     for i, channelName in enumerate(channels):
         try:
             if isChannel(channelName) == True:
