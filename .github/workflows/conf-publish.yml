@@ -37,7 +37,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest test.py
+        pytest scripts/test.py
     - name: Freeze with Flask-Frozen
       run: |
         export FLASK_DEBUG=True; export FLASK_DEVELOPMENT=True; python3 main.py sitedata/
