@@ -160,8 +160,8 @@ def createPrivateSlackChannels(slackClient, csvFile, channelColumnName):
         if isChannel(channelName, channelsData) == False:
             try:
                 createSlackChannelAsBot(slackClient, channelName, True)
-            except SlackApiError: # set proper exception
-                print(f"Channel exists, but BOT not added to '{channelName}'")
+            except SlackApiError as e: # set proper exception
+                print("Exception in creating channel: ", e)
 
 
 def createEmptyLinkColumnInCSVifNotPresent(csvFile, column_name, newCsvFile = None):
