@@ -12,12 +12,12 @@ from modules.papers import Papers
 from modules.zoom_creator import ZoomCreator
 
 # Uncomment below for zoom creation
-zoomCreator =  ZoomCreator("../../ISMIR-2022-Miniconf-Data/sitedata/events.csv")
-zoomCreator.setupZoomCalls(zoomUtils)
+# zoomCreator =  ZoomCreator("../../ISMIR-2022-Miniconf-Data/sitedata/events.csv")
+# zoomCreator.setupZoomCalls(zoomUtils)
 
 # Uncommnet below for tutorials
-#tutObj = Tutorials("../../ISMIR-2022-Miniconf-Data/sitedata/papers.csv", "../../ISMIR-2022-Miniconf-Data/sitedata/townscript.csv")
-#tutObj.setupSlackChannels(slackUtils)
+tutObj = Tutorials("../../ISMIR-2022-Miniconf-Data/sitedata/events.csv", "../../ISMIR-2022-Miniconf-Data/sitedata/townscript.csv")
+tutObj.setupSlackChannels(slackUtils)
 
 ##########################
 
