@@ -118,7 +118,7 @@ def getChannelID(slackClient, channelName):
 
 # Obtain User ID given user email
 def getUserID(slackClient, user_email):
-    user_data = get_all_user_data(slackClient)
+    user_data = all_user_data
     for user in user_data:
         if user['user_email'] == user_email:
             return user['user_id']
@@ -126,7 +126,7 @@ def getUserID(slackClient, user_email):
 
 # Obtain user email given user id
 def getUserEmail(slackClient, user_id):
-    user_data = get_all_user_data(slackClient)
+    user_data = all_user_data
     for user in user_data:
         if user['user_id'] == user_id:
             return user['user_email']
