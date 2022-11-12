@@ -20,6 +20,7 @@ import sys
 from utils import zoom as zoomUtils
 from utils import slack as slackUtils
 from modules.tutorials import Tutorials
+from modules.zoom_creator import ZoomCreator
 
 site_data = {}
 by_uid = {}
@@ -98,15 +99,11 @@ def main(site_data_path):
         site_data["days"].append(by_uid["days"][day])
     return extra_files
 
-def setupZoomMeetings(target_module, root_path):
-    if (target_module == "tutorials"):
-        tutorials_module = Tutorials(root_path + "tutorials.csv")
+def setupZoomMeetings(root_path):
+    zoomCreator = ZoomCreator(root_path + "events.csv")
         
-        # Setting up zoom Utils.
-        tutorials_module.setupZoomCalls(zoomUtils)
-
-    else:
-        raise Exception("Module is not supported")
+    # Setting up zoom Utils.
+    zoomCreator.setupZoomCalls(zoomUtils)
 
 def setupSlackChannels(target_module, root_path):
     if (target_module == "tutorials"):
@@ -538,11 +535,20 @@ def parse_arguments():
         help="Convert the site to static assets",
     )
 
-    parser.add_argument("path", help="Pass the JSON data path and run the server")
+    parser.add_argument(
+        "--target_action", 
+        help="Pass the action setup-zoom-meetings, setup-slack-channels or setup-webpage",
+        required=True)
 
-    parser.add_argument("target_action", help="Pass the action setup-zoom-meetings, setup-slack-channels or setup-webpage")
-
-    parser.add_argument("target_module", help="Pass the module for which action has to be done")
+    parser.add_argument(
+        "--target_module", 
+        help="Pass the module for which action has to be done",
+        required=False)
+    
+    parser.add_argument(
+        "--path",
+        help="Pass the JSON data path and run the server",
+        required=True)
 
     args = parser.parse_args()
     return args
@@ -556,23 +562,22 @@ if __name__ == "__main__":
     target_module = args.target_module
 
     if(data_path is None):
-        raise Exception("data_path is not passed")
+        raise Exception("--path for the root directory for data is missing")
 
     if(target_action is None):
-        raise Exception("target_action is not passed")
+        raise Exception("--target_action is not passed. Use setup-zoom-meetings, setup-slack-channels or setup-webpage")
     
-    if(target_module is None):
-        raise Exception("target_module is not passed")
+    if(target_action == "setup-slack-channels" and target_module is None):
+        raise Exception("--target_module is not passed")
 
-    print("Triggering using the following commands: " + data_path + "; " + target_action + "; " + target_module)
-
-    extra_files = main(data_path)
+    print("Triggering using the following commands: " + str(data_path) + "; " + str(target_action) + "; " + str(target_module))
 
     if target_action == "setup-zoom-meetings":
-        setupZoomMeetings(target_module, data_path)
+        setupZoomMeetings(data_path)
     elif target_action == "setup-slack-channels":
         setupSlackChannels(target_module)
     elif target_action == "setup-webpage":
+        extra_files = main(data_path)
         if args.build:
             freezer.freeze()
         else:
