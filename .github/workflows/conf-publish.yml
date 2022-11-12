@@ -54,6 +54,8 @@ jobs:
     - name: Freeze with Flask-Frozen
       run: |
         export FLASK_DEBUG=True; export FLASK_DEVELOPMENT=True
+        # some more random environment variables that must be defined, here's a hack to prevent them killing the workflow
+        export accountId=123; export clientId=123; export clientSecret=123
         python main.py build
     - name: Deploy to Github Pages
       uses: peaceiris/actions-gh-pages@v3
