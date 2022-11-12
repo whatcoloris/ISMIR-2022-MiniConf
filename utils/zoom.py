@@ -160,8 +160,8 @@ def createZoomLinksIfNeeded(csvFilename, topicColumnId, zoomColumnId, indexColum
         if row[topicColumnId] not in existingMeetingTopics:
             respJson = createMeeting(
                 row[topicColumnId],
-                row['start_time'],
-                row['duration'],
+                row['start_date'] + 'T' + row['start_time'],
+                "",
             )
             existingMeetings.append((respJson['id'], respJson['topic']))
             existingMeetingTopics.append(respJson['topic'])
