@@ -17,14 +17,6 @@ class Tutorials:
         self.useDummyValues = True
 
     """
-    This method inputs the zoomUtils and setup zoom calls for the all the sessions.
-    """
-    def setupZoomCalls(self, zoomUtils):
-        if(self.tutorialsCsvFile is None):
-            raise Exception("self.tutorialsCsvFile passed in contructor is null")
-        zoomUtils.createZoomLinksIfNeeded(self.tutorialsCsvFile, "title", "zoom_link", "UID")
-
-    """
     This method inputs the slack utils, and uses it to create the slack channels.
     """
     def setupSlackChannels(self, slackUtils):
