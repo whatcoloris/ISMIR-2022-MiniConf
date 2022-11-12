@@ -1,24 +1,37 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Test and Publish the ISMIR-2022-MiniConf to GHPages
+name: Test and Publish to GHPages
 
 on:
   push:
     branches: [ "dev" ]
   pull_request:
     branches: [ "dev" ]
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build:
-
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        persist-credentials: false
+        fetch-depth: 0
     - name: Set up Python 3.7
       uses: actions/setup-python@v3
       with:
@@ -43,12 +56,10 @@ jobs:
         export FLASK_DEBUG=True; export FLASK_DEVELOPMENT=True
         # some more random environment variables that must be defined, here's a hack to prevent them killing the workflow
         export accountId=123; export clientId=123; export clientSecret=123; export SLACK_TOKEN=123
-        python main.py sitedata/ --build
-    - name: Push to dev pages
-      run: |
-        git add -f build
-        git commit -am "Deploy on gh-pages-dev"
-        git subtree split --prefix build -b gh-pages-dev
-        git push --force origin gh-pages-dev
-        git checkout @{-1}
-        @echo "Deployed successfully to gh-pages-dev 🚀"
+        python app.py build
+    - name: Deploy to Github Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: ${{ github.ref == 'refs/heads/main' }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
