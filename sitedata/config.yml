@@ -1,0 +1,76 @@
+# RELEASE CONTROL
+
+music_links: true
+poster_embeds: true
+paper_embeds: true
+paper_videos: true
+
+lbd_embeds: true
+
+browse_paper_buttons: 0  # 0: none, 1: show
+
+# Set to the current conference day
+
+paper_day_release: 3
+lbd_day_release: 4 # 0: none, 4: show
+
+# CHANNEL METADATA
+
+music_program_channel: '#music-program'
+music_program_url: https://ismir2020.slack.com/archives/C01C4K3S0SU
+
+
+name: ISMIR 2022
+tagline: ISMIR 2022 HYBRID CONFERENCE
+date: 4-8 December 2022
+citation_date: 4-8 December 2022
+proceedings_title: Proceedings of the First MiniCon Conference
+analytics: UA-
+logo:
+  image: 'static/images/ismir_tab_icon.png'
+  width: 200px
+  height: auto
+# uncomment the following line to show the site title next to the logo image
+# site_title: MiniConf
+page_title:
+  prefix: 'ISMIR 2022'
+  separator: ': '
+background_image: static/images/ISMIR_Homepage_HERO_IMAGE.png
+organization: ISMIR Organization Committee
+
+# Remove or change to your chat server.
+chat_server: miniconf.sloppy.zone
+default_presentation_id: 38922815
+default_poster_pdf: /static/images/GLTR_poster.pdf
+
+
+opening_ref_title_1: Opening Session
+opening_ref_title_2: Opening Session
+
+# Configuration for auth
+#Test user
+#user: miniconf@miniconf.com
+#pass: mIniconf1_
+
+use_auth0:
+auth0_client_id : JIdr6wi0z27LyLgwkJF0fpk700aj7MNH
+auth0_domain : miniconf.auth0.com
+
+calendar:
+  colors: #  Colors for the different event hashtags:
+    ---: '#bed972'
+    social: '#4FCAEB'
+    awards: '#FF5C4D'
+    open: '#FF9636'
+    LBD: '#B4CDED'
+    tut: '#0D5F8A'
+    all: '#6C88C4'
+    pos: '#F6BF25'
+    meet: '#B39DDB'
+    vmeet: '#F86F15'
+    wimir: '#8F24AA'
+    lunch: '#34B579'
+    mus: '#3F51B5'
+    industry: '#BFCB33'
+    sat: '#A79B8E'
+  sunday_saturday: false  #  Include Sunday and Saturday

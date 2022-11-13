@@ -54,7 +54,7 @@ jobs:
     - name: Freeze with Flask-Frozen
       run: |
         export FLASK_DEBUG=True; export FLASK_DEVELOPMENT=True
-        python main.py build
+        python main.py sitedata setup-webpage tutorials --build
     - name: Deploy to Github Pages
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}
