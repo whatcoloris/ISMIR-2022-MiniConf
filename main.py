@@ -17,8 +17,8 @@ import datetime
 from dateutil import tz
 import sys
 
-from utils import zoom as zoomUtils
-from utils import slack as slackUtils
+#from utils import zoom as zoomUtils
+#from utils import slack as slackUtils
 from modules.tutorials import Tutorials
 from modules.zoom_creator import ZoomCreator
 
@@ -98,7 +98,7 @@ def main(site_data_path):
         }
         site_data["days"].append(by_uid["days"][day])
     return extra_files
-
+"""
 def setupZoomMeetings(root_path):
     zoomCreator = ZoomCreator(root_path + "events.csv")
         
@@ -114,7 +114,7 @@ def setupSlackChannels(target_module, root_path):
 
     else:
         raise Exception("Module is not supported")
-
+"""
 
 
 # ------------- SERVER CODE -------------------->
@@ -573,9 +573,11 @@ if __name__ == "__main__":
     print("Triggering using the following commands: " + str(data_path) + "; " + str(target_action) + "; " + str(target_module))
 
     if target_action == "setup-zoom-meetings":
-        setupZoomMeetings(data_path)
+        #setupZoomMeetings(data_path)
+        print("setup zoom")
     elif target_action == "setup-slack-channels":
-        setupSlackChannels(target_module)
+        #setupSlackChannels(target_module)
+        print("setup slack")
     elif target_action == "setup-webpage":
         extra_files = main(data_path)
         if args.build:
