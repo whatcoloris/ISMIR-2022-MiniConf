@@ -254,10 +254,13 @@ def topics():
 
 @app.route("/getCalendar")
 def get_calendar():
-    return send_file('static/calendar/ISMIR_2022.ics',
-                    mimetype='text/ics',
-                    attachment_filename='ISMIR_2022.ics',
-                    as_attachment=True)
+    #return send_file('static/calendar/ISMIR_2022.ics',
+    #                mimetype='text/ics',
+    #                attachment_filename='ISMIR_2022.ics',
+    #                as_attachment=True)
+    filepath = 'static/calendar/'
+    filename = 'ISMIR_2022.ics'
+    return send_file(os.path.join(filepath,filename), as_attachment=True)
 
 def extract_list_field(v, key):
     value = v.get(key, "")
